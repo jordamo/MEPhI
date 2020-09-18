@@ -309,10 +309,8 @@ namespace prog
       while (ptr != nullptr)
       {
         find_fg(&pptr, &ptr,&fg,fi);
-        //fg case
         find_ll(&pptr, &ptr, &ll, li);
 
-        // ll case
         ptr = ptr->next;
         pptr = pptr->next;
       }

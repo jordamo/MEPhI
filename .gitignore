@@ -1,2 +1,5 @@
 **/.vscode/*
 **/*.gch
+**/*.o
+**/*.bat
+**/CMakeLists.txt
