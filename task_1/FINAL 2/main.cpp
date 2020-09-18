@@ -17,6 +17,7 @@ int main()
   {
     if ((mat = input(n,m)) == nullptr)
     {
+      cout << "null mat" << endl;
       return EXIT_FAILURE;
     }
   }
@@ -24,6 +25,8 @@ int main()
   {
     if ((mat = advanced_input(n,m)) == nullptr)
     {
+
+      cout << "null mat" << endl;
       return EXIT_FAILURE;
     }
   }

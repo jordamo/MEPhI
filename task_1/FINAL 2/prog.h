@@ -44,13 +44,16 @@ namespace prog
   Line *input(int &tn, int &tm);
   int draw(Line *l, int n, int m); ////
   int dispose(Line *ll); ////
+  int find(Line *l, Item **FP, Item **LP, int *FI, int *LI, int m);
+  int find_ll(Item **pptr, Item **ptr, Item **ll, int &li);
+  int find_fg(Item **pptr, Item **ptr, Item **fg, int &fi);
   int update(Line *l, int m);
   int updateLine(Line *l, int m);
 
   int swap(Line *l, Item *fp, Item *lp, int fi, int li, int m);
   int swapLineItems(Item *fp, Item *lp);
   int swapLineItems(Line *line, Item *p, int l, int m);
-  int sdraw(Line *l, int n, int m); 
+  int sdraw(Line *l, int n, int m);
   bool check_col(Item *l, Item *f);
 
 }

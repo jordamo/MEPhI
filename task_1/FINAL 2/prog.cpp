@@ -299,63 +299,88 @@ namespace prog
     return 0;
   }
 
+  int find(Line *l, Item **FP, Item **LP, int &FI, int &LI, int m)
+  {
+      Item *ptr = l->next->next, *pptr = l->next;
+      Item *ll = nullptr, *fg=nullptr;
+      int fi = -1, li = -1;
+      if (ptr == nullptr)
+        return 0;
+      while (ptr != nullptr)
+      {
+        find_fg(&pptr, &ptr,&fg,fi);
+        //fg case
+        find_ll(&pptr, &ptr, &ll, li);
+
+        // ll case
+        ptr = ptr->next;
+        pptr = pptr->next;
+      }
+
+      if (fg == nullptr && fi < 0 && pptr->col >= 0 && pptr->col + 1 < m && pptr->data < 0)
+        fi = pptr->col + 1;
+      if (pptr->col >= 0 && pptr->col + 1 < m && pptr->data > 0)
+        li = pptr->col + 1;
+
+      if (fg != nullptr && fi >= 0 && fg->next->col > fi) fg = nullptr;
+      if (ll != nullptr && li >= 0 && ll->next->col < li) ll = nullptr;
+
+      *(FP) = fg;
+      *(LP) = ll;
+      FI = fi;
+      LI = li;
+      return 0;
+  }
+
+  int find_ll(Item **pptr, Item **ptr, Item **ll, int &li)
+  {
+    if ((*pptr)->col < 0 && (*ptr)->col > 0 && (*ptr)->data < 0)
+      *ll = *pptr;
+    else
+    {
+      if ((*pptr)->data > (*ptr)->data && (*ptr)->col - (*pptr)->col == 1 && (*pptr)->col >= 0)
+        *ll = *pptr;
+      if ((*pptr)->col >= 0 && (*ptr)->col - (*pptr)->col > 1)
+      {
+        if ((*pptr)->data > 0 && (*ptr)->data > 0)
+          li = (*pptr)->col + 1;
+        else if ((*ptr)->data < 0)
+          *ll = *pptr;
+      }
+    }
+
+    return 0;
+  }
+
+  int find_fg(Item **pptr, Item **ptr, Item **fg, int &fi)
+  {
+    if (*fg == nullptr && (*ptr)->col > 0)
+    {
+      if ((*pptr)->col < 0 || (*ptr)->col - (*pptr)->col > 1)
+      {
+        if ((*ptr)->data > 0)
+          *fg = *pptr;
+      }
+      else
+      {
+        if ((*ptr)->col - (*pptr)->col == 1 && (*ptr)->data > (*pptr)->data)
+          *fg = *pptr;
+      }
+    }
+    if ((*pptr)->col >= 0 && fi < 0 &&
+      (*pptr)->data < 0 && (*ptr)->col - (*pptr)->col > 1)
+      fi = (*pptr)->col + 1;
+
+    return 0;
+  }
+
   int updateLine(Line *l, int m)
   /* updates a line */
   {
-    Item *ptr = l->next->next, *pptr = l->next;
-    Item *ll = nullptr, *fg=nullptr;
-    int fi = -1, li = -1;
-    if (ptr == nullptr)
-      return 0;
-    while (ptr != nullptr)
-    {
-      //fg case
-      if (fg == nullptr && ptr->col > 0)
-      {
-        if (pptr->col < 0 || ptr->col - pptr->col > 1)
-        {
-          if (ptr->data > 0)
-            fg = pptr;
-        }
-        else
-        {
-          if (ptr->col - pptr->col == 1 && ptr->data > pptr->data)
-            fg = pptr;
-        }
-      }
-      if (pptr->col >= 0 && fi < 0 &&
-        pptr->data < 0 && ptr->col - pptr->col > 1)
-        fi = pptr->col + 1;
-
-      // ll case
-      if (pptr->col < 0 && ptr->col > 0 && ptr->data < 0)
-        ll = pptr;
-      else
-      {
-        if (pptr->data > ptr->data && ptr->col - pptr->col == 1 && pptr->col >= 0)
-          ll = pptr;
-        if (pptr->col >= 0 && ptr->col - pptr->col > 1)
-        {
-          if (pptr->data > 0 && ptr->data > 0)
-            li = pptr->col + 1;
-          else if (ptr->data < 0)
-            ll = pptr;
-        }
-      }
-
-      ptr = ptr->next;
-      pptr = pptr->next;
-    }
-
-    if (fg == nullptr && fi < 0 && pptr->col >= 0 && pptr->col + 1 < m && pptr->data < 0)
-      fi = pptr->col + 1;
-    if (pptr->col >= 0 && pptr->col + 1 < m && pptr->data > 0)
-      li = pptr->col + 1;
-
-    if (fg != nullptr && fi >= 0 && fg->next->col > fi) fg = nullptr;
-    if (ll != nullptr && li >= 0 && ll->next->col < li) ll = nullptr;
-
-    swap(l, fg, ll, fi, li, m);
+    Item *fg=nullptr, *lp=nullptr;
+    int fi=-1,li=-1;
+    find(l, &fg, &lp, fi, li, m);
+    swap(l, fg, lp, fi, li, m);
     return 0;
   }
 
