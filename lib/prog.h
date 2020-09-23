@@ -7,6 +7,8 @@ namespace graphs
   #define ERMSG "Incorrect input.\n"
   #define N 200
   #define MAX_LONG_DOUBLE 1e060
+  #define PI 3.14159265358979323846
+  
 
   enum LemType {elips, giperb};
   
@@ -34,7 +36,7 @@ namespace graphs
     long double y;
 
     Coords(long double x, long double y) : x(x), y(y) {}
-    Coords() : x(1), y(1) {}
+    Coords() : x(0), y(0) {}
 
     friend ostream &operator<<(ostream &os, Coords &cd);
   };
@@ -57,8 +59,9 @@ namespace graphs
 
     public:
       BytLemniscat() : c(0), m(0), cords(Coords()) {update_type_koefs();}
-      BytLemniscat(long double c, long double m, long double x, long double y) : c(c), m(m), cords(x,y) {update_type_koefs();}
-      BytLemniscat(long double c, long double m, Coords cords) : c(c), m(m), cords(cords) {update_type_koefs();}
+      BytLemniscat(long double cc, long double mm, long double x, long double y);
+      BytLemniscat(long double cc, long double mm);
+      BytLemniscat(long double c, long double m, Coords cords);
       ~BytLemniscat() {};
 
       int change_params(long double c, long double m);
@@ -66,6 +69,7 @@ namespace graphs
       int get_coords(Coords &coords);
       int change_coords(Coords coords);
       int get_polar_koefs(long double &a, long double &b);
+      long double world_distance();
       Coords distance_to_center(long double phi);
       char *get_equation();
       LemType get_type();

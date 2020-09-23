@@ -6,8 +6,29 @@
 
 namespace graphs
 {
-  #define PI 3.14159265358979323846
   
+  BytLemniscat::BytLemniscat(long double cc, long double mm, long double x, long double y)
+  {
+    this->c = cc; 
+    this->m = mm; 
+    this->cords = Coords(x,y);
+    update_type_koefs();
+  }
+  BytLemniscat::BytLemniscat(long double cc, long double mm)
+  {
+    this->c = cc;
+    this->m = mm;
+    this->cords = Coords(0,0);
+    update_type_koefs();
+  }
+  BytLemniscat::BytLemniscat(long double c, long double m, Coords coords) 
+  {
+    this->c = c; 
+    this->m = m;
+    this->cords = coords;
+    update_type_koefs();
+  }
+      
   
   ostream &operator<<(ostream &os, Coords &cd)
     {
@@ -82,11 +103,17 @@ namespace graphs
 
   int BytLemniscat::get_polar_koefs(long double &a, long double &b)
   {
-    a = aa;
-    b = bb;
+    a = is_zero(aa) ? 0 : aa;
+    b = is_zero(bb) ? 0 : bb;
     if (type == giperb)
       b *= -1;
+    
     return 0;
+  }
+
+  long double BytLemniscat::world_distance()
+  {
+    return cords.x*cords.x + cords.y*cords.y;
   }
 
   Coords BytLemniscat::distance_to_center(long double phi)
