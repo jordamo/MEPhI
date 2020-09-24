@@ -7,21 +7,24 @@
 namespace graphs
 {
   
-  BytLemniscat::BytLemniscat(long double cc, long double mm, long double x, long double y)
+  BytLemniscat::BytLemniscat(
+    long double const cc, long double const mm, 
+    long double const x, long double const y
+  )
   {
     this->c = cc; 
     this->m = mm; 
     this->cords = Coords(x,y);
     update_type_koefs();
   }
-  BytLemniscat::BytLemniscat(long double cc, long double mm)
+  BytLemniscat::BytLemniscat(long double const cc, long double const mm)
   {
     this->c = cc;
     this->m = mm;
     this->cords = Coords(0,0);
     update_type_koefs();
   }
-  BytLemniscat::BytLemniscat(long double c, long double m, Coords coords) 
+  BytLemniscat::BytLemniscat(long double const c, long double const m, Coords const coords) 
   {
     this->c = c; 
     this->m = m;
@@ -60,13 +63,13 @@ namespace graphs
     update_type();
   }
 
-  long double BytLemniscat::calc_elips_area()
+  long double BytLemniscat::calc_elips_area() const
   {
     long double S = PI*(aa+bb)/2;
     return S;
   }
 
-  long double BytLemniscat::calc_giperb_area()
+  long double BytLemniscat::calc_giperb_area() const
   {
     long double a = sqrtl(aa);
     long double b = sqrtl(bb);
@@ -74,7 +77,7 @@ namespace graphs
     return S;
   }
 
-  int BytLemniscat::change_params(long double cc, long double mm)
+  int BytLemniscat::change_params(long double const cc, long double const mm)
   {
     this->c = cc;
     this->m = mm;
@@ -82,26 +85,26 @@ namespace graphs
     return 0;
   }
 
-  int BytLemniscat::get_params(long double &cc, long double &mm)
+  int BytLemniscat::get_params(long double &cc, long double &mm) const
   {
     cc = c;
     mm = m;
     return 0;
   }
 
-  int BytLemniscat::get_coords(Coords &coords)
+  int BytLemniscat::get_coords(Coords &coords) const
   {
     coords = cords;
     return 0;
   }
 
-  int BytLemniscat::change_coords(Coords coords)
+  int BytLemniscat::change_coords(Coords const coords)
   {
     cords = coords;
     return 0;
   }
 
-  int BytLemniscat::get_polar_koefs(long double &a, long double &b)
+  int BytLemniscat::get_polar_koefs(long double &a, long double &b) const
   {
     a = is_zero(aa) ? 0 : aa;
     b = is_zero(bb) ? 0 : bb;
@@ -111,22 +114,25 @@ namespace graphs
     return 0;
   }
 
-  long double BytLemniscat::world_distance()
+  long double BytLemniscat::world_distance() const
   {
     return cords.x*cords.x + cords.y*cords.y;
   }
 
-  Coords BytLemniscat::distance_to_center(long double phi)
+  Coords *BytLemniscat::distance_to_center(long double const phi) const
   {
     long double b = bb;
     if (type == giperb)
       b *= -1;
     long double p = sqrtl(aa*powl(cosl(phi), 2) + b*powl(sinl(phi), 2));
 
-    return Coords(p*cosl(phi)+cords.x, p*sinl(phi)+cords.y);
+    Coords *end = new Coords[2];
+    end[0] = Coords(p*cosl(phi)+cords.x, p*sinl(phi)+cords.y);
+    end[1] = Coords(-p*cosl(phi)+cords.x, -p*sinl(phi)+cords.y);
+    return end;
   }
 
-  char *BytLemniscat::get_equation()
+  char *BytLemniscat::get_equation() const
   {
     long double a, b;
     get_polar_koefs(a,b);
@@ -139,11 +145,11 @@ namespace graphs
     }
     else if (is_zero(a))
     {
-      l = sprintf_s(buf, "p^2 = %.2f*cos^2(phi)", b);
+      l = sprintf_s(buf, "p^2 = %.2f*sin^2(phi)", b);
     }
     else if (is_zero(b))
     {
-      l = sprintf_s(buf, "p^2 = %.2f*sin^2(phi)", a);
+      l = sprintf_s(buf, "p^2 = %.2f*cos^2(phi)", a);
     }
     else
     {
@@ -157,12 +163,62 @@ namespace graphs
     return end;
   }
 
-  LemType BytLemniscat::get_type()
+  char *BytLemniscat::get_abs_equation() const
+  {
+    long double a, b, pp0, p0, ksi,pk;
+    Coords cd;
+    get_coords(cd);
+    pp0 = world_distance();
+    if (pp0 == 0)
+      return get_equation();
+    else
+    {
+      p0 = sqrtl(pp0);
+      if (cd.x == 0)
+      {
+        if (cd.y > 0)
+          ksi = 0;
+        else
+          ksi = -PI;
+      }
+      else
+        ksi = PI - asinl(cd.y/cd.x);
+      pk = 2*p0;
+      get_polar_koefs(a,b);
+      int l;
+      char buf[200];
+
+      if (is_zero(a) && is_zero(b))
+      {
+        l = sprintf_s(buf, "p^2 = %.2f", pp0);
+      }
+      else if (is_zero(a))
+      {
+        l = sprintf_s(buf, "p^2 = %.2f*cos^2(phi)+%.2f-%.2f*cos(phi%+.2f)*sqrt(|%.2f*sin^2(phi)|)", b, pp0,pk,ksi,b);
+      }
+      else if (is_zero(b))
+      {
+        l = sprintf_s(buf, "p^2 = %.2f*cos^2(phi)+%.2f-%.2f*cos(phi%+.2f)*sqrt(|%.2f*cos^2(phi)|)", a, pp0,pk,ksi,a);
+      }
+      else
+      {
+        l = sprintf_s(buf, "p^2 = %.2f*cos^2(phi)%+.2f*sin^2(phi)+%.2f-%.2f*cos(phi%+.2f)*sqrt(|%.2f*cos^2(phi)%+.2f*sin^2(phi)|)", a, b, pp0,pk,ksi,a,b);
+      }
+      buf[++l] = '\0';
+      char *end = new char[l];
+      end[0] = '\0';
+      strcat_s(end, l, buf);
+      
+      return end;
+    }
+  }
+
+  LemType BytLemniscat::get_type() const
   {
     return type;
   }
 
-  long double BytLemniscat::area()
+  long double BytLemniscat::area() const
   {
     if (type == elips)
       return calc_elips_area();
@@ -220,8 +276,10 @@ namespace graphs
   {
     long double phi;
     get_num(phi,"Enter phi angle --> ");
-    Coords cd = line.distance_to_center(phi);
-    std::cout << "Distant to polar center is: " << cd << std::endl;
+    Coords *cd = line.distance_to_center(phi);
+    std::cout << "Distant to polar center is: vec1 = " << cd[0] 
+      <<" vec2 = "<< cd[1] << std::endl;
+    delete[] cd;
     return 0;
   }
 
@@ -246,6 +304,14 @@ namespace graphs
   int dialog_area(BytLemniscat &line)
   {
     std::cout << "Area: " << line.area() << std::endl;
+    return 0;
+  }
+  
+  int dialog_get_abs_equation(BytLemniscat &line)
+  {
+    char *t = line.get_abs_equation();
+    std::cout << "Abs Equation: " << t << std::endl;
+    delete t;
     return 0;
   }
   

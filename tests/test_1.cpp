@@ -106,7 +106,7 @@ TEST(BytLemniscatTest, DistantToCenterTest)
 {
   const long double eps = 1e-15;
   long double a,b,x,y, phi, r;
-  Coords cd, cd2;
+  Coords *cd, cd2;
   BytLemniscat line;
 
   cd2 = Coords(2,-2);
@@ -121,10 +121,22 @@ TEST(BytLemniscatTest, DistantToCenterTest)
     r = sqrtl(a*cosl(phi)*cosl(phi) + b*sin(phi)*sin(phi));
     x = r*cosl(phi) + cd2.x;
     y = r*sinl(phi) + cd2.y;
-    if (cd.x == x) // nan check
-      EXPECT_NEAR(cd.x, x, eps);
-    if (cd.y == y) // nan check
-    EXPECT_NEAR(cd.y, y, eps);
+
+    if (!isnan(cd[0].x))
+      EXPECT_NEAR(cd[0].x, x, eps);
+    
+    if (!isnan(cd[0].y))
+      EXPECT_NEAR(cd[0].y, y, eps);
+    
+    x = -r*cosl(phi) + cd2.x;
+    y = -r*sinl(phi) + cd2.y;
+    
+    if (!isnan(cd[1].x))
+      EXPECT_NEAR(cd[1].x, x, eps);
+  
+    if (!isnan(cd[1].y))
+      EXPECT_NEAR(cd[1].y, y, eps);
+    delete[] cd;
   }
 
   // cd2 = Coords(6,-3);
@@ -180,7 +192,7 @@ TEST(BytLemniscatTest, EquationTest)
   
   line.change_params(-8,2);
   line.get_polar_koefs(a,b);
-  sprintf_s(tmp, "p^2 = %.2f*cos^2(phi)", b);
+  sprintf_s(tmp, "p^2 = %.2f*sin^2(phi)", b);
   
   t = line.get_equation();
   EXPECT_STRCASEEQ(t, tmp);
@@ -188,7 +200,7 @@ TEST(BytLemniscatTest, EquationTest)
   
   line.change_params(8,2.0);
   line.get_polar_koefs(a,b);
-  sprintf_s(tmp, "p^2 = %.2f*sin^2(phi)", a);
+  sprintf_s(tmp, "p^2 = %.2f*cos^2(phi)", a);
   
   t = line.get_equation();
   EXPECT_STRCASEEQ(t, tmp);

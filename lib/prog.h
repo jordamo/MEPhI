@@ -54,26 +54,27 @@ namespace graphs
       void update_type();
       void update_koefs();
       void update_type_koefs();
-      long double calc_elips_area();
-      long double calc_giperb_area();
+      long double calc_elips_area() const;
+      long double calc_giperb_area() const;
 
     public:
       BytLemniscat() : c(0), m(0), cords(Coords()) {update_type_koefs();}
-      BytLemniscat(long double cc, long double mm, long double x, long double y);
-      BytLemniscat(long double cc, long double mm);
-      BytLemniscat(long double c, long double m, Coords cords);
+      BytLemniscat(long double const cc, long double const mm, long double const x, long double const y);
+      BytLemniscat(long double const cc, long double const mm);
+      BytLemniscat(long double const c, long double const m, Coords const cords);
       ~BytLemniscat() {};
 
-      int change_params(long double c, long double m);
-      int get_params(long double &cc, long double &mm);
-      int get_coords(Coords &coords);
-      int change_coords(Coords coords);
-      int get_polar_koefs(long double &a, long double &b);
-      long double world_distance();
-      Coords distance_to_center(long double phi);
-      char *get_equation();
-      LemType get_type();
-      long double area();
+      int change_params(long double const c, long double const m);
+      int get_params(long double &cc, long double &mm) const;
+      int get_coords(Coords &coords) const;
+      int change_coords(Coords const coords);
+      int get_polar_koefs(long double &a, long double &b) const;
+      long double world_distance() const;
+      Coords *distance_to_center(long double const phi) const;
+      char *get_equation() const;
+      char *get_abs_equation() const;
+      LemType get_type() const;
+      long double area() const;
   };
 
   bool is_zero(long double a);
@@ -86,6 +87,7 @@ namespace graphs
   int dialog_get_equation(BytLemniscat &line);
   int dialog_get_type(BytLemniscat &line);
   int dialog_area(BytLemniscat &line);
+  int dialog_get_abs_equation(BytLemniscat &line);
 
 
   struct DialogFunc
@@ -104,6 +106,7 @@ namespace graphs
     {dialog_get_equation, "Get equation"},
     {dialog_get_type, "Get type"},
     {dialog_area, "Get area"},
+    {dialog_get_abs_equation, "Get Abs Equation"},
   };
 
   void display_menu();
