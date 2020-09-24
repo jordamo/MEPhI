@@ -38,7 +38,8 @@ namespace graphs
     Coords(long double x, long double y) : x(x), y(y) {}
     Coords() : x(0), y(0) {}
 
-    friend ostream &operator<<(ostream &os, Coords &cd);
+    // friend ostream &operator<<(ostream &os, Coords &cd);
+    void print_coords();
   };
 
   class BytLemniscat
@@ -59,8 +60,8 @@ namespace graphs
 
     public:
       BytLemniscat() : c(0), m(0), cords(Coords()) {update_type_koefs();}
-      BytLemniscat(long double const cc, long double const mm, long double const x, long double const y);
-      BytLemniscat(long double const cc, long double const mm);
+      BytLemniscat(long double const cc, long double const mm, long double x=0, long double y=0);
+      // BytLemniscat(long double const cc, long double const mm);
       BytLemniscat(long double const c, long double const m, Coords const cords);
       ~BytLemniscat() {};
 
@@ -75,6 +76,7 @@ namespace graphs
       char *get_abs_equation() const;
       LemType get_type() const;
       long double area() const;
+      long double get_ksi() const;
   };
 
   bool is_zero(long double a);
@@ -98,13 +100,13 @@ namespace graphs
 
   DialogFunc dialog_menu[]  = {
     {dialog_chage_params, "Change parameters"},
+    {dialog_change_coords, "Change coordinates"},
+    {dialog_get_type, "Get type"},
     {dialog_get_params, "Get parameters"},
     {dialog_get_coords, "Get coordinates"},
-    {dialog_change_coords, "Change coordinates"},
     {dialog_get_polar_koefs, "Get polar koefs"},
     {dialog_distance_to_center, "Get distance to center"},
     {dialog_get_equation, "Get equation"},
-    {dialog_get_type, "Get type"},
     {dialog_area, "Get area"},
     {dialog_get_abs_equation, "Get Abs Equation"},
   };

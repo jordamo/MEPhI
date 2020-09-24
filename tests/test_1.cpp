@@ -104,7 +104,7 @@ TEST(BytLemniscatTest, PolarKoefsTest)
 
 TEST(BytLemniscatTest, DistantToCenterTest)
 {
-  const long double eps = 1e-15;
+  const long double eps = 1e-12;
   long double a,b,x,y, phi, r;
   Coords *cd, cd2;
   BytLemniscat line;

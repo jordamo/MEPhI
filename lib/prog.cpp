@@ -17,26 +17,30 @@ namespace graphs
     this->cords = Coords(x,y);
     update_type_koefs();
   }
-  BytLemniscat::BytLemniscat(long double const cc, long double const mm)
-  {
-    this->c = cc;
-    this->m = mm;
-    this->cords = Coords(0,0);
-    update_type_koefs();
-  }
+  // BytLemniscat::BytLemniscat(long double const cc, long double const mm)
+  // {
+  //   this->c = cc;
+  //   this->m = mm;
+  //   this->cords = Coords(0,0);
+  //   update_type_koefs();
+  // }
   BytLemniscat::BytLemniscat(long double const c, long double const m, Coords const coords) 
   {
     this->c = c; 
     this->m = m;
     this->cords = coords;
     update_type_koefs();
-  }
-      
+  }    
   
-  ostream &operator<<(ostream &os, Coords &cd)
-    {
-      return os << "(" << cd.x << ", " << cd.y << ")";
-    }
+  // ostream &operator<<(ostream &os, Coords &cd)
+  //   {
+  //     return os << "(" << cd.x << ", " << cd.y << ")";
+  //   }
+
+  void Coords::print_coords()
+  {
+    std::cout << "(" << x << ", " << y << ")";
+  }
 
   void BytLemniscat::update_type()
   {
@@ -163,6 +167,25 @@ namespace graphs
     return end;
   }
 
+  long double BytLemniscat::get_ksi() const
+  {
+    long double ksi, pp0, p0;
+    Coords cd;
+    get_coords(cd);
+    pp0 = world_distance();
+    p0 = sqrtl(pp0);
+    if (cd.x == 0)
+    {
+      if (cd.y > 0)
+        ksi = 0;
+      else
+        ksi = -PI;
+    }
+    else
+      ksi = PI - asinl(cd.y/cd.x);
+    return ksi;
+  }
+
   char *BytLemniscat::get_abs_equation() const
   {
     long double a, b, pp0, p0, ksi,pk;
@@ -173,16 +196,8 @@ namespace graphs
       return get_equation();
     else
     {
+      ksi = get_ksi();
       p0 = sqrtl(pp0);
-      if (cd.x == 0)
-      {
-        if (cd.y > 0)
-          ksi = 0;
-        else
-          ksi = -PI;
-      }
-      else
-        ksi = PI - asinl(cd.y/cd.x);
       pk = 2*p0;
       get_polar_koefs(a,b);
       int l;
@@ -249,7 +264,9 @@ namespace graphs
   {
     Coords cd;
     line.get_coords(cd);
-    std::cout << "coords: " << cd << std::endl;
+    std::cout << "coords: ";
+    cd.print_coords();
+    std::cout << std::endl;
     return 0;
   }
 
@@ -277,8 +294,11 @@ namespace graphs
     long double phi;
     get_num(phi,"Enter phi angle --> ");
     Coords *cd = line.distance_to_center(phi);
-    std::cout << "Distant to polar center is: vec1 = " << cd[0] 
-      <<" vec2 = "<< cd[1] << std::endl;
+    std::cout << "Distant to polar center is: vec1 = ";
+    cd[0].print_coords(); 
+    std::cout <<" vec2 = ";
+    cd[1].print_coords();
+    std::cout << std::endl;
     delete[] cd;
     return 0;
   }
