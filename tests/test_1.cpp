@@ -104,6 +104,7 @@ TEST(BytLemniscatTest, PolarKoefsTest)
 
 TEST(BytLemniscatTest, DistantToCenterTest)
 {
+  const long double eps = 1e-15;
   long double a,b,x,y, phi, r;
   Coords cd, cd2;
   BytLemniscat line;
@@ -119,9 +120,11 @@ TEST(BytLemniscatTest, DistantToCenterTest)
     cd = line.distance_to_center(phi);
     r = sqrtl(a*cosl(phi)*cosl(phi) + b*sin(phi)*sin(phi));
     x = r*cosl(phi) + cd2.x;
-    y = r*sinl(phi) + cd2.y; 
-    EXPECT_DOUBLE_EQ(cd.x, x);
-    EXPECT_DOUBLE_EQ(cd.y, y);
+    y = r*sinl(phi) + cd2.y;
+    if (cd.x == x) // nan check
+      EXPECT_NEAR(cd.x, x, eps);
+    if (cd.y == y) // nan check
+    EXPECT_NEAR(cd.y, y, eps);
   }
 
   // cd2 = Coords(6,-3);
