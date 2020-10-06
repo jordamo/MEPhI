@@ -10,7 +10,7 @@ TEST(GoogleTest, FirstTest)
   EXPECT_EQ(1,1);  
 }
 
-TEST(StaticTest, CopyConstructorTest)
+TEST(DynamicTest, CopyConstructorTest)
 {
   int av = 0xaa12bb;
   HexNum *a = new HexNum(av);
@@ -27,7 +27,7 @@ TEST(StaticTest, CopyConstructorTest)
     EXPECT_EQ(sss_s[i], out_s[i]);
 }
 
-TEST(StaticTest, BaseConstructorTest)
+TEST(DynamicTest, BaseConstructorTest)
 {
   HexNum a;
   ostringstream out;
@@ -41,7 +41,7 @@ TEST(StaticTest, BaseConstructorTest)
     EXPECT_EQ(out_s[i], s[i]);
 }
 
-TEST(StaticTest, NumConstructorTest)
+TEST(DynamicTest, NumConstructorTest)
 {
   int av = 0xaa12bb;
   HexNum a(av);
@@ -56,7 +56,7 @@ TEST(StaticTest, NumConstructorTest)
     EXPECT_EQ(out_s[i], s[i]);
 }
 
-TEST(StaticTest, StrConstructorTest)
+TEST(DynamicTest, StrConstructorTest)
 {
   const char *av = "cc12ff";
   HexNum a(av);
