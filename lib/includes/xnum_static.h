@@ -29,8 +29,8 @@ namespace xnum
       friend std::ostream &operator<<(std::ostream &out, const HexNum &hn);
       friend HexNum operator+(const HexNum &a, const HexNum &b);
       friend HexNum operator-(const HexNum &a, const HexNum &b);
-      friend HexNum operator<<=(const HexNum &hn, const int &shift);
-      friend HexNum operator>>=(const HexNum &hn, const int &shift);
+      HexNum &operator<<=(const int &shift);
+      HexNum &operator>>=(const int &shift);
       friend bool operator==(const HexNum &a, const HexNum &b);
       friend bool operator>(const HexNum &a, const HexNum &b);
       friend bool operator<(const HexNum &a, const HexNum &b);

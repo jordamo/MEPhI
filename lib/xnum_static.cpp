@@ -101,36 +101,34 @@ namespace xnum
     return a + c.change_sign();
   }
 
-  HexNum operator<<=(const HexNum &hn, const int &shift)
+  HexNum &HexNum::operator<<=(const int &shift)
   {
-    HexNum b = hn;
     if (shift < 0)
       throw std::exception("Negativ shift");
     int sh = std::min(shift, SIZE);
     for (int i=sh; i < SIZE; i++)
     {
-      b.digits[i-sh] = b.digits[i];
+      digits[i-sh] = digits[i];
     }
     for (int i=SIZE-1; i>SIZE-1-sh; i--)
     {
-      b.digits[i] = 0;
+      digits[i] = 0;
     }
-    return b;
+    return *this;
   }
 
-  HexNum operator>>=(const HexNum &hn, const int &shift)
+  HexNum &HexNum::operator>>=(const int &shift)
   {
-    HexNum b = hn;
     if (shift < 0)
       throw std::exception("Negativ shift");
     int sh = std::min(shift, SIZE);
     for (int i=SIZE-1; i >= sh; i--)
     {
-      b.digits[i] = b.digits[i-sh];
+      digits[i] = digits[i-sh];
     }
     for (int i=0; i < sh; i++)
-      b.digits[i] = 0;
-    return b;
+      digits[i] = 0;
+    return *this;
   }
 
   bool operator==(const HexNum &a, const HexNum &b)
