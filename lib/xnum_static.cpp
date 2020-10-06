@@ -18,10 +18,11 @@ namespace xnum
       throw std::exception("Too big number");
 
     sign = num < 0;
-    for (int i=0; i < sz; i++)
+    for (int i=0; i < sz-1; i++)
     {
       digits[SIZE-i-1] = (num >> i*4) & fl;
     }
+    digits[SIZE-sz] = (num >> (((sz-1)*4)-1)) & fl;
     for (int i=sz+1; i <= SIZE; i++)
       digits[SIZE-i] = 0;
   }

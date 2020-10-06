@@ -11,21 +11,33 @@ namespace xnum_d
 
   HexNum::HexNum(const int &num)
   {
-    size = sizeof(num)*2;
-    try
+    if (num == 0)
     {
-      digits = new unsigned short[size];
+      size = 1;
+      sign = 0;
+      digits = zero_digits();
     }
-    catch(const std::bad_alloc &e)
+    else
     {
-      std::cerr << e.what() << std::endl;
-      throw std::exception("Not enought memory");
-    }
-    
-    sign = num < 0;
-    for (int i=0; i < size; i++)
-    {
-      digits[size-i-1] = (num >> i*4) & fl;
+      int dsz = num, count = 0;
+      unsigned short *tmp_d;
+      sign = 0;
+      if (dsz < 0)
+      {
+        dsz = -dsz;
+        sign = 1;
+      }
+      tmp_d = new unsigned short[2*(int)sizeof(dsz)];
+      while (dsz > 0)
+      {
+        tmp_d[count++] = dsz % (fl+1);
+        dsz /= (fl+1);
+      }
+      digits = new unsigned short[count];
+      size = count;
+      for (int i=0; i < count; i++)
+        digits[count-i-1] = tmp_d[i];
+      delete []tmp_d;
     }
   }
 
@@ -423,7 +435,20 @@ namespace xnum_d
 
   HexNum &HexNum::change_sign()
   {
-    this->sign = (this->sign + 1) & 1;
+    if (this->sign)
+    {
+      this->sign = 0;
+    }
+    else
+    {
+      bool nz = false;
+      for (int i=0; i < size; i++)
+        if (digits[i] != 0) nz = true;
+      if (nz)
+      {
+        sign = 1; 
+      }
+    }
     return *this;
   }
 
