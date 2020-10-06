@@ -40,44 +40,15 @@ namespace xnum_d
     }
   }
 
-  HexNum::HexNum(const char *sval) //
+  HexNum::HexNum(const char *sval)
   {
-    int sz = (int)strlen(sval), n=0, index;
-    char tmp;
-
-    sign = 0;
-    if (sval[0] == '-')
-    {
-      sign = 1;
-      n=1;
-    }
-    size = check_zeros(sval+n, sz-n);
-    if (!size)
+    sign = get_vals_string_sign(sval);
+    size = get_vals_string_size(sval);
+    digits = get_vals_string_digits(sval, size);
+    if (!size || digits[0] == 0)
     {
       size = 1;
-      digits = new unsigned short[size];
-      digits[0] = 0;
       sign = 0;
-    }
-    else
-    {
-      try
-      {
-        digits = new unsigned short[size];
-      }
-      catch(const std::bad_alloc &e)
-      {
-        std::cerr << e.what() << std::endl;
-        throw std::exception("Not enought memory");
-      }
-
-      for (int i=1; i<=size; i++)
-      {
-        tmp = toupper(sval[sz-i]);
-        if (check_val(tmp, index))
-          throw std::exception("Not a hex digit");
-        digits[size-i] = index;
-      }
     }
   }
 
@@ -104,10 +75,9 @@ namespace xnum_d
   {
     if (digits != nullptr)
       delete[] digits;
-    // std::cout << "dest" << std::endl;
   }
 
-  const HexNum &HexNum::operator=(const HexNum &a) //
+  const HexNum &HexNum::operator=(const HexNum &a)
   {
     delete[] this->digits;
     unsigned short *arr;
@@ -133,7 +103,6 @@ namespace xnum_d
     char buf[256];
     inp >> buf;
     HexNum nhn(buf);
-    // std::cout << nhn;
     hn = nhn;
     return inp;
   }
@@ -149,72 +118,6 @@ namespace xnum_d
       out << vals[hn.digits[i]];
     } 
     return out;
-  }
-
-  void add_case(int &v, int &g, const HexNum &aa, const HexNum &bb, const int &i, 
-  const int &max_sz, const int &min_sz, const int &sz, const int &szm, const bool &mami)
-  { 
-    g = (fl + !aa.sign) & fl;
-    v = (fl + !bb.sign) & fl;
-    if (i < sz)
-      g = aa.digits[sz-1-i];
-    else  
-    {
-      if (mami)
-      {
-        if (i >= sz && i < max_sz)
-          g = 0;
-      }
-      else
-      {
-        if (i >= sz && i < min_sz)
-          g = 0;  
-      }
-    }
-    if (i < szm)
-      v = bb.digits[szm-1-i];
-    else 
-    {
-      if (mami)
-      {
-        if (i >= szm && i < min_sz)
-        {
-          v = 0;
-        }
-      }
-      else
-      {
-        if (i >= szm && i < max_sz)
-        {
-          v = 0;
-        }
-      }
-    }
-  }
-
-  bool max_min(const HexNum &a, const HexNum &b, HexNum &aa, HexNum &bb, 
-  int &max_sz, int &min_sz, int &sz, int &szm)
-  {
-    bool sr = true;
-    max_sz = a.size, min_sz = b.size;
-    aa = a.dop_code();
-    bb = b.dop_code();
-    if (b.size > a.size)
-    {
-      max_sz = b.size;
-      min_sz = a.size;
-      sr = !sr;
-    }
-    sz = aa.size, szm = bb.size;
-    if (bb.size > aa.size)
-    {
-      sr = !sr; 
-      sz = bb.size;
-      szm = aa.size;
-      swap(aa,bb);
-    }
-    return sr;
-    
   }
 
   HexNum operator+(const HexNum &a, const HexNum &b)
@@ -233,14 +136,11 @@ namespace xnum_d
       std::cerr << e.what() << std::endl;
       throw std::exception("Not enought memory");
     }
+
     n_str[max_sz+2] = '\0';
-    n_str[0] = '0';
-    n_str[1] = '0';
+    n_str[0] = '0'; n_str[1] = '0';
     int tmp, v, g, sg=0, psg=0;
-    std::cout << sz << "_" << szm << std::endl;
-    std::cout << aa << std::endl << bb <<std::endl;
-    std::cout << "msaz: " << max_sz << " min_sz" << min_sz << std::endl;
-    std::cout << "s: " << n_str[max_sz+1] << std::endl;
+
     for (int i=0; i <= max_sz; i++)
     {
       add_case(v,g, aa, bb, i, max_sz, min_sz, sz, szm, mami);
@@ -254,13 +154,11 @@ namespace xnum_d
     }
     if ((sg + a.sign + b.sign) & 1)
       n_str[0] = '-';
-    std::cout << n_str << " " << strlen(n_str) << std::endl;
 
     HexNum c(n_str);
     
     delete[] n_str;
     return c.dop_code();
-    
   }
 
   HexNum operator-(const HexNum &a, const HexNum &b)
@@ -435,6 +333,71 @@ namespace xnum_d
     b.digits = p;
   }
 
+  void add_case(int &v, int &g, const HexNum &aa, const HexNum &bb, const int &i, 
+    const int &max_sz, const int &min_sz, const int &sz, const int &szm, const bool &mami)
+  { 
+    g = (fl + !aa.sign) & fl;
+    v = (fl + !bb.sign) & fl;
+    if (i < sz)
+      g = aa.digits[sz-1-i];
+    else  
+    {
+      if (mami)
+      {
+        if (i >= sz && i < max_sz)
+          g = 0;
+      }
+      else
+      {
+        if (i >= sz && i < min_sz)
+          g = 0;  
+      }
+    }
+    if (i < szm)
+      v = bb.digits[szm-1-i];
+    else 
+    {
+      if (mami)
+      {
+        if (i >= szm && i < min_sz)
+        {
+          v = 0;
+        }
+      }
+      else
+      {
+        if (i >= szm && i < max_sz)
+        {
+          v = 0;
+        }
+      }
+    }
+  }
+
+  bool max_min(const HexNum &a, const HexNum &b, HexNum &aa, HexNum &bb, 
+    int &max_sz, int &min_sz, int &sz, int &szm)
+  {
+    bool sr = true;
+    max_sz = a.size, min_sz = b.size;
+    aa = a.dop_code();
+    bb = b.dop_code();
+    if (b.size > a.size)
+    {
+      max_sz = b.size;
+      min_sz = a.size;
+      sr = !sr;
+    }
+    sz = aa.size, szm = bb.size;
+    if (bb.size > aa.size)
+    {
+      sr = !sr; 
+      sz = bb.size;
+      szm = aa.size;
+      swap(aa,bb);
+    }
+    return sr;
+  }
+
   bool HexNum::is_odd() const
   {
     return digits[size-1] & 1;
@@ -485,10 +448,76 @@ namespace xnum_d
         index = i;
         return false;
       }
-    }
+    } 
     index = -1;
     return true;
   }
+
+  unsigned short *HexNum::get_vals_string_digits(const char *s, int size)
+  {
+    int sz = (int)strlen(s);
+    int index;
+    unsigned short *digits;
+    char tmp;
+    if (!size)
+    {
+      digits = HexNum::zero_digits();
+    }
+    else
+    {
+      try
+      {
+        digits = new unsigned short[size];
+      }
+      catch(const std::bad_alloc &e)
+      {
+        std::cerr << e.what() << std::endl;
+        throw std::exception("Not enought memory");
+      }
+
+      for (int i=1; i<=size; i++)
+      {
+        tmp = toupper(s[sz-i]);
+        if (HexNum::check_val(tmp, index))
+        {
+          delete[] digits;
+          digits = HexNum::zero_digits();
+          return digits;
+        }
+        digits[size-i] = index;
+      }
+    }
+    return digits;
+  }
+
+  unsigned short *HexNum::zero_digits()
+  {
+    unsigned short *digits = nullptr;
+    try
+    {
+      digits = new unsigned short[1];
+      digits[0] = 0;
+    }
+    catch(const std::bad_alloc& e)
+    {
+      std::cerr << e.what() << '\n';
+    }
+    return digits;
+  }
+
+  int HexNum::get_vals_string_size(const char *s)
+  {
+    int size, sz = (int)strlen(s);
+    int n = HexNum::get_vals_string_sign(s);
+    size = HexNum::check_zeros(s+n, sz-n);
+    return size;
+  }
+
+  short HexNum::get_vals_string_sign(const char *s)
+  {
+    return s[0] == '-';
+  }
+
 
   int HexNum::check_zeros(const char *s, const int slen)
   {

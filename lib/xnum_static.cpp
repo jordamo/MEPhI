@@ -312,7 +312,6 @@ namespace xnum
     return 0;
   }
 
-
   int dialog_odd(HexNum &a)
   {
     std::cout << a.is_odd() << std::endl;
