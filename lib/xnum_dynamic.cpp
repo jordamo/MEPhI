@@ -6,18 +6,7 @@ namespace xnum_d
 {
   HexNum::HexNum() : digits(nullptr), size(1), sign(0) 
   {
-    unsigned short *arr;
-    try
-    {
-      arr = new unsigned short[1];
-      arr[0] = 0;
-      digits = arr;
-    }
-    catch (const std::bad_alloc &e)
-    {
-      std::cerr << e.what() << std::endl;
-      throw std::exception("Not enought memory");
-    }
+    digits = zero_digits();
   }
 
   HexNum::HexNum(const int &num)
@@ -146,7 +135,6 @@ namespace xnum_d
       add_case(v,g, aa, bb, i, max_sz, min_sz, sz, szm, mami);
       
       tmp = v + g;
-      std::cout << v << " " << g << " " << (tmp+sg)%(fl+1) << std::endl;
       n_str[max_sz+1-i] = vals[(tmp+sg)%(fl+1)];
 
       psg = sg;
@@ -424,9 +412,9 @@ namespace xnum_d
     
     for (int i=size; i >= 1; i--)
     {
-      tmp = (fl + sg - digits[i-1]) % (fl+1);
-      sg = 0;
-      n_str[i] = vals[tmp];
+      tmp = (fl + sg - digits[i-1]);
+      sg = tmp / (fl + 1);
+      n_str[i] = vals[tmp % (fl+1)];
     }
     HexNum ht(n_str);
     delete[] n_str;

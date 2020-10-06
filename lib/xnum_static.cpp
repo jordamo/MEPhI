@@ -38,7 +38,12 @@ namespace xnum
       sign = 1;
       n=1;
     }
-
+    
+    if (sz-n == 1 && sval[n] == '0')
+    {
+      sign = 0; 
+    }
+    
     for (int i=1; i<=sz-n; i++)
     {
       tmp = toupper(sval[sz-i]);
@@ -48,6 +53,7 @@ namespace xnum
     }
     for (int i=sz+1-n; i <= SIZE; i++)
       digits[SIZE-i] = 0;
+    
   }
 
   std::istream &operator>>(std::istream &inp, HexNum &hn)
@@ -204,9 +210,9 @@ namespace xnum
     *n_str = '-';
     for (int i=SIZE; i >= 1; i--)
     {
-      tmp = (fl + sg - digits[i-1]) % (fl+1);
-      sg = 0;
-      n_str[i] = vals[tmp];
+      tmp = (fl + sg - digits[i-1]);
+      sg = tmp / (fl+1);
+      n_str[i] = vals[tmp % (fl+1)];
     }
     HexNum ht(n_str);
     return ht;
@@ -214,7 +220,20 @@ namespace xnum
 
   HexNum &HexNum::change_sign()
   {
-    this->sign = (this->sign + 1) & 1;
+    if (this->sign)
+    {
+      this->sign = 0;
+    }
+    else
+    {
+      bool nz = false;
+      for (int i=0; i < SIZE; i++)
+        if (digits[i] != 0) nz = true;
+      if (nz)
+      {
+        sign = 1; 
+      }
+    }
     return *this;
   }
 
