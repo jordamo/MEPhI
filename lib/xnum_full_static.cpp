@@ -5,29 +5,37 @@
 namespace xnum_f
 {
   HexNum::HexNum()
+  /* BaseConstructor */
   {
     for (int i=0; i < SIZE; i++)
       digits[i] = 0;
     sign = 0;
   }
 
-  HexNum::HexNum(const int &num)
+  HexNum::HexNum(const int &n)
+  /* Constructor via int */
   {
+    int num = n;
     int sz = sizeof(num)*2;
     if (sz*4 > SIZE*4+1)
       throw std::exception("Too big number");
 
-    sign = num < 0;
-    for (int i=0; i < sz-1; i++)
+    sign = 0;
+    if (num < 0)
+    {
+      sign = 1;
+      num = -num;
+    }
+    for (int i=0; i < sz; i++)
     {
       digits[SIZE-i-1] = (num >> i*4) & fl;
     }
-    digits[SIZE-sz] = (num >> (((sz-1)*4)-1)) & fl;
     for (int i=sz+1; i <= SIZE; i++)
       digits[SIZE-i] = 0;
   }
 
   HexNum::HexNum(const char *sval)
+  /* Constructor via str */
   {
     int sz = (int)strlen(sval), n=0, index;
     char tmp;

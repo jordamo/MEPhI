@@ -11,13 +11,19 @@ namespace xnum
     sign = 0;
   }
 
-  HexNum::HexNum(const int &num)
+  HexNum::HexNum(const int &n)
   {
+    int num = n;
     int sz = sizeof(num)*2;
     if (sz*4 > SIZE*4+1)
       throw std::exception("Too big number");
 
-    sign = num < 0;
+    sign = 0;
+    if (num < 0)
+    {
+      sign = 1;
+      num = -num;
+    }
     for (int i=0; i < sz-1; i++)
     {
       digits[SIZE-i-1] = (num >> i*4) & fl;

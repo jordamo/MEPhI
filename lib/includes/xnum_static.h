@@ -23,7 +23,7 @@ namespace xnum
 
     public:
       HexNum();
-      HexNum(const int &num);
+      HexNum(const int &n);
       HexNum(const char *sval);
       friend std::istream &operator>>(std::istream &inp, HexNum &hn);
       friend std::ostream &operator<<(std::ostream &out, const HexNum &hn);
