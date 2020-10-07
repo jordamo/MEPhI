@@ -22,15 +22,20 @@ namespace xnum_f
       short sign;
 
     public:
+    // constructors
       HexNum();
       HexNum(const int &n);
       HexNum(const char *sval);
+    // iostream functions
       friend std::istream &input(std::istream &inp, HexNum &hn);
       friend std::ostream &print(std::ostream &out, const HexNum &hn);
+    // arifmetics functions
       friend HexNum add(const HexNum &a, const HexNum &b);
       friend HexNum sub(const HexNum &a, const HexNum &b);
+    // shift functions
       HexNum &shift_l(const int &shift);
       HexNum &shift_r(const int &shift);
+    // boolean functions
       friend bool eq(const HexNum &a, const HexNum &b);
       friend bool gt(const HexNum &a, const HexNum &b);
       friend bool lt(const HexNum &a, const HexNum &b);
@@ -38,11 +43,13 @@ namespace xnum_f
       friend bool ng(const HexNum &a, const HexNum &b);
       friend bool ne(const HexNum &a, const HexNum &b);
       bool is_odd() const;
+    // support functions
       HexNum dop_code() const;
       HexNum &change_sign();
       static bool check_val(const char &s, int &index);
   };
 
+  // dialog functions
   int dialog_input(HexNum &);
   int dialog_add(HexNum &);
   int dialog_sub(HexNum &);
