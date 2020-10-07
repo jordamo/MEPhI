@@ -5,6 +5,7 @@
 namespace xnum
 {
   HexNum::HexNum()
+  /* BaseConstructor */
   {
     for (int i=0; i < SIZE; i++)
       digits[i] = 0;
@@ -12,6 +13,7 @@ namespace xnum
   }
 
   HexNum::HexNum(const int &n)
+  /* Constructor via int */
   {
     int num = n;
     int sz = sizeof(num)*2;
@@ -34,6 +36,7 @@ namespace xnum
   }
 
   HexNum::HexNum(const char *sval)
+  /* Constructor via str */
   {
     int sz = (int)strlen(sval), n=0, index;
     char tmp;
@@ -64,6 +67,7 @@ namespace xnum
   }
 
   std::istream &operator>>(std::istream &inp, HexNum &hn)
+  /* creates HexNum from istream */
   {
     char buf[SIZE+2];
     inp >> buf;
@@ -73,6 +77,7 @@ namespace xnum
   }
 
   std::ostream &operator<<(std::ostream &out, const HexNum &hn)
+  /* puts HexNum to ostream */
   {
     if (hn.sign)
       out << '-';
@@ -85,7 +90,8 @@ namespace xnum
     return out;
   }
 
-  HexNum operator+(const HexNum &a, const HexNum &b) //
+  HexNum operator+(const HexNum &a, const HexNum &b)
+  /* returns the sum of a and b */
   {
     HexNum aa = a.dop_code(), bb = b.dop_code();    
     int tmp, sg = 0;
@@ -109,12 +115,14 @@ namespace xnum
   }
 
   HexNum operator-(const HexNum &a, const HexNum &b)
+  /* returns the sum of a and -b */
   {
     HexNum c = b;
     return a + c.change_sign();
   }
 
   HexNum &HexNum::operator<<=(const int &shift)
+  /* shifts a HexNum to the left by 'shift' number of hex digits */
   {
     if (shift < 0)
       throw std::exception("Negativ shift");
@@ -131,6 +139,7 @@ namespace xnum
   }
 
   HexNum &HexNum::operator>>=(const int &shift)
+  /* shifts a HexNum to the right by 'shift' number of hex digits */
   {
     if (shift < 0)
       throw std::exception("Negativ shift");
@@ -145,6 +154,7 @@ namespace xnum
   }
 
   bool operator==(const HexNum &a, const HexNum &b)
+  /* returns true if a == b, false otherwise */
   {
     if (a.sign != b.sign)
       return false;
@@ -157,6 +167,7 @@ namespace xnum
   }
 
   bool operator>(const HexNum &a, const HexNum &b)
+  /* returns true if a > b, false otherwise */
   {
     if (!a.sign && b.sign)
       return true;
@@ -183,31 +194,37 @@ namespace xnum
   }
 
   bool operator<(const HexNum &a, const HexNum &b)
+  /* returns true if a < b, false otherwise */
   {
     return b > a;
   }
 
   bool operator>=(const HexNum &a, const HexNum &b)
+  /* returns true if a >= b, false otherwise */
   {
     return !(a < b); 
   }
 
   bool operator<=(const HexNum &a, const HexNum &b)
+  /* returns true if a <= b, false otherwise */
   {
     return !(a > b);
   }
 
   bool operator!=(const HexNum &a, const HexNum &b)
+  /* returns true if a != b, false otherwise */
   {
     return !(a==b);
   }
 
   bool HexNum::is_odd() const
+  /* returns true if a is odd, false otherwise */
   {
     return digits[SIZE-1] & 1;
   }
 
   HexNum HexNum::dop_code() const
+  /* returns twos-complement of HexNum */
   {
     if (!sign)
       return *this;
@@ -226,6 +243,7 @@ namespace xnum
   }
 
   HexNum &HexNum::change_sign()
+  /* changes the sign of a HexNum and returns it */
   {
     if (this->sign)
     {
@@ -245,6 +263,9 @@ namespace xnum
   }
 
   bool HexNum::check_val(const char &s, int &index)
+  /* checks if char is in '0123456789ABCDEF' and
+     returns index of char in '0123456789ABCDEF'
+   */
   {
     for (int i=0; i<=fl; i++)
     {
@@ -259,6 +280,7 @@ namespace xnum
   }
 
   int dialog_input(HexNum &a)
+  /* dialog function. Inputs HexNum from console */
   {
     std::cout << "Enter a hex number: ";
     std::cin >> a;
@@ -266,6 +288,7 @@ namespace xnum
   }
 
   int dialog_add(HexNum &a)
+  /* dialog function. Inputs and adds HexNum to a */
   {
     HexNum b;
     std::cout << "Enter a hex number to add: ";
@@ -275,6 +298,7 @@ namespace xnum
   }
 
   int dialog_sub(HexNum &a)
+  /* dialog function. Input and add -HexNum to a */
   {
     HexNum b;
     std::cout << "Enter a hex number to sub: ";
@@ -284,6 +308,9 @@ namespace xnum
   }
 
   int dialog_eq(HexNum &a)
+  /* dialog function. Inputs HexNum and checks if it
+    equals to a
+   */
   {
     HexNum b;
     std::cout << "Enter a hex number to comp: ";
@@ -293,6 +320,9 @@ namespace xnum
   }
 
   int dialog_ne(HexNum &a)
+  /* dialog function. Inputs HexNum and checks if it
+    not equals to a
+   */
   {
     
     HexNum b;
@@ -303,6 +333,9 @@ namespace xnum
   }
 
   int dialog_gt(HexNum &a)
+  /* dialog function. Inputs HexNum and checks if it
+    greater than  a
+   */
   {
     HexNum b;
     std::cout << "Enter a hex number to comp: ";
@@ -312,6 +345,9 @@ namespace xnum
   }
 
   int dialog_lt(HexNum &a)
+  /* dialog function. Inputs HexNum and checks if it
+    less than a
+   */
   {
     HexNum b;
     std::cout << "Enter a hex number to comp: ";
@@ -321,6 +357,9 @@ namespace xnum
   }
 
   int dialog_ng(HexNum &a)
+  /* dialog function. Inputs HexNum and checks if it
+    no greater than a
+   */
   {
     HexNum b;
     std::cout << "Enter a hex number to comp: ";
@@ -330,6 +369,9 @@ namespace xnum
   }
 
   int dialog_nl(HexNum &a)
+  /* dialog function. Inputs HexNum and checks if it
+    no less than a
+   */
   {
     HexNum b;
     std::cout << "Enter a hex number to comp: ";
@@ -339,12 +381,14 @@ namespace xnum
   }
 
   int dialog_odd(HexNum &a)
+  /* dialog function. Checks if HexNum is odd */
   {
     std::cout << a.is_odd() << std::endl;
     return 0;
   }
 
   int dialog_shift_l(HexNum &a)
+  /* dialog function. Shifts HexNum to the left */
   {
     int s;
     if (!get_command(s,SIZE, "Enter a number to shift --> "))
@@ -354,6 +398,7 @@ namespace xnum
   }
 
   int dialog_shift_r(HexNum &a)
+  /* dialog function. Shifts HexNum to the right */
   {
     int s;
     if (!get_command(s,SIZE, "Enter a number to shift --> "))
@@ -363,12 +408,14 @@ namespace xnum
   }
 
   int dialog_show(HexNum &a)
+  /* dialog function. Displays HexNum in console */
   {
     std::cout << a << std::endl;
     return 0;
   }
 
   void display_menu()
+  /* dialog function. Displays a list of commands */
   {
     for (unsigned int i=0; i<menu_size; i++)
     {

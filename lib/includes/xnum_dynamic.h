@@ -6,8 +6,10 @@ namespace xnum_d
   #define INFO "Enter a number --> "
   #define ERMSG "Incorrect input.\n"
 
+  // the biggest hex digit
   const short fl = 0xF; 
 
+  // decimal to hex number conversion array
   const char vals[16] = {
     '0', '1', '2', '3',
     '4', '5', '6', '7',
@@ -23,32 +25,42 @@ namespace xnum_d
       short sign;
 
     public:
+    // constructors
       HexNum();
       HexNum(const int &num);
       HexNum(const char *sval);
       HexNum(const HexNum &a);
+    // destructor
       ~HexNum();
+    // Assignment oprator
       const HexNum &operator=(const HexNum &a);
+    // iostream functions
       friend std::istream &operator>>(std::istream &inp, HexNum &hn);
       friend std::ostream &operator<<(std::ostream &out, const HexNum &hn);
+    // arifmetics functions
       friend HexNum operator+(const HexNum &a, const HexNum &b);
       friend HexNum operator-(const HexNum &a, const HexNum &b);
+    // shift functions
       HexNum &operator<<=(const int &shift);
       HexNum &operator>>=(const int &shift);
+    // boolean functions
       friend bool operator==(const HexNum &a, const HexNum &b);
       friend bool operator>(const HexNum &a, const HexNum &b);
       friend bool operator<(const HexNum &a, const HexNum &b);
       friend bool operator>=(const HexNum &a, const HexNum &b);
       friend bool operator<=(const HexNum &a, const HexNum &b);
       friend bool operator!=(const HexNum &a, const HexNum &b);
+      bool is_odd() const;
+
+    // support functions
+      HexNum dop_code() const;
+      HexNum &change_sign();
+
       friend void swap(HexNum &a, HexNum &b);
       friend void add_case(int &v, int &g, const HexNum &aa, const HexNum &bb, 
         const int &i, const int &max_sz, const int &min_sz, const int &sz, const int &szm, const bool &mami);
       friend bool max_min(const HexNum &a, const HexNum &b, HexNum &aa, HexNum &bb, int &max_sz, int &min_sz, int &sz, int &szm);
-      bool is_odd() const;
-      HexNum dop_code() const;
-      HexNum &change_sign();
-
+      
       static bool check_val(const char &s, int &index);
       static unsigned short *get_vals_string_digits(const char *s, int size);
       static unsigned short *zero_digits();
@@ -57,6 +69,7 @@ namespace xnum_d
       static int check_zeros(const char *s, const int slen);
   };
 
+  // dialog functions
   int dialog_input(HexNum &);
   int dialog_add(HexNum &);
   int dialog_sub(HexNum &);

@@ -6,8 +6,10 @@ namespace xnum_f
   #define INFO "Enter a number --> "
   #define ERMSG "Incorrect input.\n"
 
+  // the biggest hex digit
   const short fl = 0xF; 
 
+  // decimal to hex number conversion array
   const char vals[16] = {
     '0', '1', '2', '3',
     '4', '5', '6', '7',

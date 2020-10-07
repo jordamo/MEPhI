@@ -6,8 +6,10 @@ namespace xnum
   #define INFO "Enter a number --> "
   #define ERMSG "Incorrect input.\n"
 
+  // the biggest hex digit
   const short fl = 0xF; 
 
+  // decimal to hex number conversion array
   const char vals[16] = {
     '0', '1', '2', '3',
     '4', '5', '6', '7',
@@ -22,15 +24,20 @@ namespace xnum
       short sign;
 
     public:
+    // constructors
       HexNum();
       HexNum(const int &n);
       HexNum(const char *sval);
+    // iostream functions
       friend std::istream &operator>>(std::istream &inp, HexNum &hn);
       friend std::ostream &operator<<(std::ostream &out, const HexNum &hn);
+    // arifmetics functions
       friend HexNum operator+(const HexNum &a, const HexNum &b);
       friend HexNum operator-(const HexNum &a, const HexNum &b);
+    // shift functions
       HexNum &operator<<=(const int &shift);
       HexNum &operator>>=(const int &shift);
+    // boolean functions
       friend bool operator==(const HexNum &a, const HexNum &b);
       friend bool operator>(const HexNum &a, const HexNum &b);
       friend bool operator<(const HexNum &a, const HexNum &b);
@@ -38,11 +45,13 @@ namespace xnum
       friend bool operator<=(const HexNum &a, const HexNum &b);
       friend bool operator!=(const HexNum &a, const HexNum &b);
       bool is_odd() const;
+    // support functions
       HexNum dop_code() const;
       HexNum &change_sign();
       static bool check_val(const char &s, int &index);
   };
-
+  
+  // dialog functions
   int dialog_input(HexNum &);
   int dialog_add(HexNum &);
   int dialog_sub(HexNum &);
