@@ -15,6 +15,7 @@ target_include_directories(gtest PRIVATE ${GTEST_ROOT})
 set(lib
     lib/xnum_static.cpp
     lib/xnum_dynamic.cpp
+    lib/xnum_full_static.cpp
   )
 
 add_library(libs SHARED ${lib})
@@ -28,3 +29,8 @@ target_link_libraries(main_static libs)
 target_link_libraries(tests_static libs gtest)
 target_link_libraries(main_dynamic libs)
 target_link_libraries(tests_dynamic libs gtest)
+
+add_executable(full_static src/full_static.cpp)
+add_executable(tests_full_static tests/full_static_test.cpp)
+target_link_libraries(full_static libs)
+target_link_libraries(tests_full_static libs gtest)
