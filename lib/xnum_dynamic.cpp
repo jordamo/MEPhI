@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <xnum_dynamic.h>
-
+//
 namespace xnum_d
 {
   HexNum::HexNum() : digits(nullptr), size(1), sign(0)
