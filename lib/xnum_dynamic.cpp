@@ -86,22 +86,25 @@ namespace xnum_d
   const HexNum &HexNum::operator=(const HexNum &a)
   /* Assignment operator */
   {
-    delete[] this->digits;
-    unsigned short *arr;
-    try
+    if (*this != a)
     {
-      arr = new unsigned short[a.size];
+      delete[] this->digits;
+      unsigned short *arr;
+      try
+      {
+        arr = new unsigned short[a.size];
+      }
+      catch (const std::bad_alloc &e)
+      {
+        std::cerr << e.what() << std::endl;
+        throw std::exception("Not enought memory");
+      }
+      for (int i=0; i < a.size; i++)
+        arr[i] = a.digits[i];
+      this->digits = arr;
+      this->sign = a.sign;
+      this->size = a.size;
     }
-    catch (const std::bad_alloc &e)
-    {
-      std::cerr << e.what() << std::endl;
-      throw std::exception("Not enought memory");
-    }
-    for (int i=0; i < a.size; i++)
-      arr[i] = a.digits[i];
-    this->digits = arr;
-    this->sign = a.sign;
-    this->size = a.size;
     return *this;
   }
 
