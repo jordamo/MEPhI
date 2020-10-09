@@ -86,7 +86,7 @@ namespace xnum_d
   const HexNum &HexNum::operator=(const HexNum &a)
   /* Assignment operator */
   {
-    if (*this != a)
+    if (this != &a)
     {
       delete[] this->digits;
       unsigned short *arr;
